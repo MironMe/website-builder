@@ -3,622 +3,847 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Builder - Create Your Site</title>
+    <title>RetroSite Lab</title>
     <style>
+        :root {
+            --bg: #070b13;
+            --bg-2: #101a2a;
+            --panel: rgba(13, 22, 35, 0.9);
+            --panel-2: rgba(17, 28, 44, 0.95);
+            --line: rgba(120, 247, 255, 0.35);
+            --neon: #76f7ff;
+            --cyan: #6ee7ff;
+            --purple: #b78cff;
+            --pink: #ff71d9;
+            --green: #7bffb5;
+            --gold: #ffd166;
+            --text: #e8f7ff;
+            --muted: #a8c4d9;
+            --danger: #ff6b7d;
+        }
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: #f5f5f5;
+        html, body {
+            height: 100%;
+            background:
+                radial-gradient(circle at top, rgba(118, 247, 255, 0.08), transparent 30%),
+                linear-gradient(180deg, #040812 0%, #0a1420 100%);
+            color: var(--text);
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                180deg,
+                rgba(255,255,255,0.04),
+                rgba(255,255,255,0.04) 1px,
+                transparent 2px,
+                transparent 4px
+            );
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .app {
             height: 100vh;
-            overflow: hidden;
-        }
-
-        .container {
             display: flex;
-            height: 100vh;
             flex-direction: column;
+            position: relative;
+            z-index: 1;
         }
 
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 20px;
+        .topbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 100;
+            padding: 14px 22px;
+            background: rgba(11, 20, 33, 0.9);
+            border-bottom: 1px solid var(--line);
+            box-shadow: 0 0 20px rgba(118, 247, 255, 0.15);
         }
 
-        .header h1 {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .header-controls {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .domain-input {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 8px 12px;
-            border-radius: 6px;
-            color: white;
-            font-size: 14px;
-            min-width: 200px;
-        }
-
-        .domain-input::placeholder {
-            color: rgba(255,255,255,0.7);
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .btn-publish {
-            background: #48bb78;
-            color: white;
-        }
-
-        .btn-publish:hover {
-            background: #38a169;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
-        }
-
-        .btn-credits {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-
-        .btn-credits:hover {
-            background: rgba(255,255,255,0.3);
-        }
-
-        .main-content {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .preview-panel {
-            flex: 1;
-            background: white;
-            border-right: 1px solid #ddd;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .preview-header {
-            background: #f9f9f9;
-            padding: 15px;
-            border-bottom: 1px solid #ddd;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .preview-content {
-            flex: 1;
-            overflow: auto;
-            padding: 20px;
-        }
-
-        .website-frame {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            min-height: 100%;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .editable-section {
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 2px dashed #667eea;
-            border-radius: 6px;
-            background: #f8f9ff;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-height: 60px;
+        .brand {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: var(--neon);
+            text-shadow: 0 0 12px rgba(118, 247, 255, 0.7);
         }
 
-        .editable-section:hover {
-            background: #f0f1ff;
-            border-color: #764ba2;
+        .brand-mark {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--neon), var(--purple));
+            box-shadow: 0 0 15px rgba(118, 247, 255, 0.9);
         }
 
-        .editable-section.active {
-            background: #e6f0ff;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .chat-panel {
-            width: 350px;
-            background: white;
-            display: flex;
-            flex-direction: column;
-            border-left: 1px solid #ddd;
-            overflow: hidden;
-        }
-
-        .chat-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            font-weight: 600;
+        .topbar-right {
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
             gap: 12px;
         }
 
-        .message {
-            padding: 12px;
-            border-radius: 8px;
-            max-width: 90%;
-            word-wrap: break-word;
-            font-size: 14px;
-            line-height: 1.4;
-            animation: slideIn 0.3s ease;
+        .chip {
+            border: 1px solid rgba(118, 247, 255, 0.4);
+            background: rgba(118, 247, 255, 0.08);
+            color: var(--neon);
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .domain-box {
+            background: rgba(10, 16, 27, 0.9);
+            border: 1px solid var(--line);
+            color: var(--text);
+            border-radius: 10px;
+            padding: 10px 14px;
+            min-width: 220px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .domain-box::placeholder {
+            color: var(--muted);
+        }
+
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            color: #061016;
+            background: linear-gradient(135deg, var(--neon), var(--cyan));
+            box-shadow: 0 0 20px rgba(118, 247, 255, 0.28);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 28px rgba(118, 247, 255, 0.45);
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            min-height: 0;
+        }
+
+        .preview-pane {
+            flex: 1;
+            border-right: 1px solid var(--line);
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            background: rgba(7, 11, 19, 0.7);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--line);
+            background: rgba(15, 24, 37, 0.85);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-size: 11px;
+        }
+
+        .traffic {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot.red { background: #ff5f57; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #28c840; }
+
+        .preview-wrap {
+            flex: 1;
+            padding: 22px;
+            overflow: auto;
+        }
+
+        .site-window {
+            max-width: 100%;
+            min-height: 100%;
+            background: linear-gradient(180deg, #fefefe 0%, #edf5ff 100%);
+            color: #12202d;
+            border: 1px solid rgba(20, 34, 54, 0.18);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .site-header {
+            background: linear-gradient(135deg, #100d1f, #190f28 35%, #1d2437);
+            color: white;
+            padding: 18px 26px;
+        }
+
+        .site-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            font-weight: 700;
+        }
+
+        .brand-mini {
+            font-size: 20px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--neon);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 18px;
+            color: rgba(255,255,255,0.8);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .nav-links span:last-child {
+            color: var(--gold);
+        }
+
+        .site-body {
+            padding: 26px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 24px;
+            padding: 14px 0 18px;
+        }
+
+        .hero-copy {
+            padding: 10px 8px;
+        }
+
+        .eyebrow {
+            color: var(--purple);
+            letter-spacing: 0.14em;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 4vw, 4rem);
+            line-height: 0.98;
+            margin-bottom: 14px;
+            color: #1a1d2a;
+        }
+
+        .hero p {
+            color: #4a5366;
+            font-size: 1.04rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            max-width: 560px;
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .cta {
+            border: none;
+            padding: 14px 20px;
+            border-radius: 999px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .cta.primary {
+            background: linear-gradient(135deg, #8d7afe, #4bc0ff);
+            color: white;
+            box-shadow: 0 12px 30px rgba(94, 103, 255, 0.25);
+        }
+
+        .cta.secondary {
+            background: #edf3ff;
+            color: #1f2a3d;
+            border: 1px solid rgba(19, 31, 48, 0.08);
+        }
+
+        .stats {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            color: #2c3b52;
+            font-size: 14px;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.72);
+            border: 1px solid rgba(31, 43, 61, 0.08);
+            border-radius: 14px;
+            padding: 12px 16px;
+            min-width: 110px;
+        }
+
+        .stat-box strong {
+            display: block;
+            font-size: 22px;
+            color: #1f2b45;
+        }
+
+        .art-card {
+            background: linear-gradient(135deg, #132238, #1d2d48 60%, #2c4568);
+            border-radius: 24px;
+            min-height: 260px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(118, 247, 255, 0.18);
+        }
+
+        .art-card::before {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(118, 247, 255, 0.4), transparent 60%);
+            right: -30px;
+            top: 20px;
+        }
+
+        .art-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent 30%, rgba(0,0,0,0.12));
+        }
+
+        .device {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 160px;
+            border-radius: 20px;
+            background: linear-gradient(180deg, rgba(15,25,42,0.9), rgba(10,15,25,0.9));
+            border: 1px solid rgba(118,247,255,0.5);
+            box-shadow: 0 0 30px rgba(118, 247, 255, 0.25);
+            padding: 18px;
+        }
+
+        .device-screen {
+            height: 100%;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #0a1420, #102745);
+            border: 1px solid rgba(118,247,255,0.34);
+            padding: 14px;
+            color: var(--neon);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .mini-bar {
+            width: 100%;
+            height: 12px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--neon), var(--purple));
+            opacity: 0.9;
+        }
+
+        .mini-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .mini-box {
+            background: rgba(118,247,255,0.12);
+            border: 1px solid rgba(118,247,255,0.25);
+            border-radius: 8px;
+            height: 34px;
+        }
+
+        .info-row {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .info-card {
+            padding: 18px 16px;
+            border-radius: 14px;
+            background: #f3f7ff;
+            border: 1px solid rgba(17, 31, 49, 0.08);
+        }
+
+        .info-card h3 {
+            margin-bottom: 8px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #1f2d45;
+        }
+
+        .info-card p {
+            color: #56657e;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .chat-pane {
+            width: 360px;
+            background: rgba(10, 17, 24, 0.95);
+            border-left: 1px solid var(--line);
+            display: flex;
+            flex-direction: column;
+            min-width: 300px;
+        }
+
+        .chat-title {
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(16, 24, 34, 0.9);
+        }
+
+        .chat-title strong {
+            color: var(--neon);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .chat-body {
+            flex: 1;
+            overflow: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 90%;
+            padding: 12px 14px;
+            border-radius: 14px;
+            line-height: 1.5;
+            font-size: 13px;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
         }
 
         .message.user {
-            background: #667eea;
-            color: white;
-            align-self: flex-end;
+            background: linear-gradient(135deg, rgba(118,247,255,0.2), rgba(183,140,255,0.2));
+            border: 1px solid rgba(118,247,255,0.3);
+            color: #ebf9ff;
+            margin-left: auto;
             border-bottom-right-radius: 4px;
         }
 
-        .message.assistant {
-            background: #f0f0f0;
-            color: #333;
-            align-self: flex-start;
+        .message.bot {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(118,247,255,0.18);
+            color: var(--text);
+            margin-right: auto;
             border-bottom-left-radius: 4px;
         }
 
         .message.system {
-            background: #e8f5e9;
-            color: #2e7d32;
-            align-self: center;
+            width: 100%;
             text-align: center;
-            font-size: 13px;
-            max-width: 95%;
+            background: rgba(123, 255, 181, 0.08);
+            border: 1px solid rgba(123, 255, 181, 0.22);
+            color: var(--green);
+            margin: 0 auto;
+            border-radius: 8px;
         }
 
-        .chat-input-area {
-            padding: 15px;
-            border-top: 1px solid #ddd;
-            background: white;
+        .composer {
             display: flex;
             gap: 10px;
+            padding: 14px 14px 18px;
+            border-top: 1px solid var(--line);
+            background: rgba(10, 17, 24, 0.9);
         }
 
-        .chat-input {
-            flex: 1;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 10px 12px;
-            font-size: 14px;
+        textarea {
+            width: 100%;
             resize: none;
-            max-height: 80px;
-            font-family: inherit;
-        }
-
-        .chat-input:focus {
+            border: 1px solid rgba(118,247,255,0.22);
+            background: rgba(9, 14, 22, 0.95);
+            color: var(--text);
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 13px;
+            min-height: 48px;
+            max-height: 140px;
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
         }
 
-        .btn-send {
-            background: #667eea;
-            color: white;
+        textarea:focus {
+            border-color: rgba(118,247,255,0.55);
+            box-shadow: 0 0 0 3px rgba(118,247,255,0.08);
+        }
+
+        .send-btn {
             border: none;
-            padding: 10px 16px;
-            border-radius: 6px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--neon), var(--purple));
+            color: #07151d;
+            font-weight: 900;
+            width: 68px;
             cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
         }
 
-        .btn-send:hover {
-            background: #764ba2;
-            transform: translateY(-2px);
-        }
-
-        .btn-send:active {
-            transform: translateY(0);
+        .send-btn:hover {
+            filter: brightness(1.08);
         }
 
         .loading {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #667eea;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .spinner {
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
+            border: 2px solid rgba(118,247,255,0.3);
+            border-top-color: var(--neon);
             animation: spin 1s linear infinite;
-            vertical-align: middle;
-            margin-right: 8px;
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .section-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .section-text {
-            font-size: 16px;
-            color: #666;
-            line-height: 1.6;
-        }
-
-        .credits-badge {
-            background: rgba(255,255,255,0.2);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
+            to { transform: rotate(360deg); }
         }
 
         .modal {
-            display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
+            inset: 0;
+            display: none;
             align-items: center;
             justify-content: center;
+            background: rgba(4, 10, 18, 0.74);
+            z-index: 30;
         }
 
         .modal.active {
             display: flex;
         }
 
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            max-width: 400px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        .modal-card {
+            width: min(420px, calc(100vw - 30px));
+            background: linear-gradient(180deg, #101b29, #0b1420);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 24px 20px;
+            box-shadow: 0 0 40px rgba(118,247,255,0.15);
         }
 
-        .modal-content h2 {
-            margin-bottom: 15px;
-            color: #333;
+        .modal-card h3 {
+            color: var(--neon);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-size: 12px;
         }
 
-        .modal-content p {
-            color: #666;
-            margin-bottom: 20px;
-            font-size: 15px;
+        .modal-card h2 {
+            margin-bottom: 12px;
+            font-size: 28px;
+            color: white;
         }
 
-        .input-group {
-            margin-bottom: 15px;
+        .modal-card p {
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 18px;
         }
 
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-            font-size: 14px;
+        .domain-display {
+            background: rgba(118,247,255,0.08);
+            border: 1px solid rgba(118,247,255,0.3);
+            border-radius: 10px;
+            color: var(--neon);
+            padding: 12px 14px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            word-break: break-all;
         }
 
-        .input-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        .modal-buttons {
+        .modal-actions {
             display: flex;
-            gap: 10px;
             justify-content: flex-end;
         }
 
-        .btn-modal {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
+        @media (max-width: 1000px) {
+            .main {
+                flex-direction: column;
+            }
+
+            .chat-pane {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid var(--line);
+                min-height: 320px;
+            }
         }
 
-        .btn-modal.cancel {
-            background: #f0f0f0;
-            color: #333;
-        }
+        @media (max-width: 700px) {
+            .topbar {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
 
-        .btn-modal.confirm {
-            background: #667eea;
-            color: white;
-        }
+            .topbar-right {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
 
-        .published-badge {
-            background: #48bb78;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
+            .domain-box {
+                min-width: 0;
+                flex: 1;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .info-row {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1>✨ Website Builder</h1>
-            <div class="header-controls">
-                <div class="credits-badge">∞ Unlimited Credits</div>
-                <input type="text" class="domain-input" id="domainInput" placeholder="yourdomain.build">
-                <button class="btn btn-publish" onclick="publishWebsite()">Publish Site</button>
+    <div class="app">
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-mark"></span>
+                <span>RetroSite Lab</span>
             </div>
-        </div>
+            <div class="topbar-right">
+                <div class="chip">Unlimited Credits</div>
+                <input id="domainInput" class="domain-box" type="text" placeholder="your-site.build">
+                <button class="btn btn-primary" onclick="publishSite()">Publish</button>
+            </div>
+        </header>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Preview Panel -->
-            <div class="preview-panel">
-                <div class="preview-header">📱 Live Preview</div>
-                <div class="preview-content">
-                    <div class="website-frame" id="websiteFrame">
-                        <h1 class="section-title" onclick="editSection(this)">Welcome to Your Website</h1>
-                        <p class="section-text" onclick="editSection(this)">Click any section to edit it with AI assistance. Describe what you want and our AI will help you create it.</p>
-                        
-                        <div class="editable-section" onclick="editSection(this)">
-                            <div>
-                                <h2 class="section-title">About Section</h2>
-                                <p class="section-text">Tell your story here. Ask the chat to help you write this.</p>
+        <div class="main">
+            <section class="preview-pane">
+                <div class="panel-header">
+                    <div class="traffic">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                    </div>
+                    <span>Live Preview</span>
+                </div>
+                <div class="preview-wrap">
+                    <div class="site-window">
+                        <div class="site-header">
+                            <div class="site-nav">
+                                <div class="brand-mini">RetroSite</div>
+                                <div class="nav-links">
+                                    <span>Home</span>
+                                    <span>Features</span>
+                                    <span>Pricing</span>
+                                    <span>Launch</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="editable-section" onclick="editSection(this)">
-                            <div>
-                                <h2 class="section-title">Services</h2>
-                                <p class="section-text">Describe what you offer. The AI can help you list and format services.</p>
-                            </div>
-                        </div>
+                        <div class="site-body">
+                            <div class="hero">
+                                <div class="hero-copy">
+                                    <div class="eyebrow">Neon-ready websites</div>
+                                    <h1>Build a retro website that feels future-proof.</h1>
+                                    <p>
+                                        Design bold landing pages with AI help, launch instantly,
+                                        and publish your brand with a clean custom domain.
+                                    </p>
+                                    <div class="cta-row">
+                                        <button class="cta primary">Get Started</button>
+                                        <button class="cta secondary">View Demo</button>
+                                    </div>
+                                    <div class="stats">
+                                        <div class="stat-box"><strong>∞</strong> Credits</div>
+                                        <div class="stat-box"><strong>3x</strong> Faster</div>
+                                        <div class="stat-box"><strong>24/7</strong> AI</div>
+                                    </div>
+                                </div>
 
-                        <div class="editable-section" onclick="editSection(this)">
-                            <div>
-                                <h2 class="section-title">Contact</h2>
-                                <p class="section-text">Add your contact information. Ask the AI to help format it nicely.</p>
+                                <div class="art-card">
+                                    <div class="device">
+                                        <div class="device-screen">
+                                            <div class="mini-bar"></div>
+                                            <div class="mini-grid">
+                                                <div class="mini-box"></div>
+                                                <div class="mini-box"></div>
+                                                <div class="mini-box"></div>
+                                            </div>
+                                            <div class="mini-grid">
+                                                <div class="mini-box"></div>
+                                                <div class="mini-box"></div>
+                                                <div class="mini-box"></div>
+                                            </div>
+                                            <div class="mini-bar" style="width: 60%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="info-row">
+                                <div class="info-card">
+                                    <h3>Launch Fast</h3>
+                                    <p>Generate polished website sections in seconds with AI-guided prompts.</p>
+                                </div>
+                                <div class="info-card">
+                                    <h3>Pixel Feedback</h3>
+                                    <p>Preview your design live while editing, then publish instantly.</p>
+                                </div>
+                                <div class="info-card">
+                                    <h3>Retro Energy</h3>
+                                    <p>Create an old-school aesthetic with modern tools and a clean workflow.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Chat Panel -->
-            <div class="chat-panel">
-                <div class="chat-header">
-                    🤖 AI Assistant
+            <aside class="chat-pane">
+                <div class="chat-title">
+                    <strong>AI Builder</strong>
+                    <span class="chip" style="font-size:10px; padding:6px 10px;">Online</span>
                 </div>
-                <div class="chat-messages" id="chatMessages">
-                    <div class="message system">
-                        👋 Hi! I'm your AI assistant. Tell me what you'd like to build, and I'll help you create it. You have unlimited credits!
-                    </div>
+                <div class="chat-body" id="chatBody">
+                    <div class="message system">System: Retro build mode active. Ask for a section, copy, or layout.</div>
+                    <div class="message bot">Hello creator. Tell me what kind of website you want to make, and I’ll help you build it.</div>
                 </div>
-                <div class="chat-input-area">
-                    <textarea class="chat-input" id="chatInput" placeholder="Ask me to help build your website..." rows="2"></textarea>
-                    <button class="btn-send" onclick="sendMessage()">Send</button>
+                <div class="composer">
+                    <textarea id="chatInput" placeholder="Ask the AI to make a hero, pricing, or contact section..."></textarea>
+                    <button class="send-btn" onclick="sendPrompt()">Send</button>
                 </div>
-            </div>
+            </aside>
         </div>
     </div>
 
-    <!-- Publish Modal -->
     <div class="modal" id="publishModal">
-        <div class="modal-content">
-            <h2>🎉 Publish Your Website</h2>
-            <p>Your website is ready to go live!</p>
-            <div class="input-group">
-                <label>Your Domain:</label>
-                <input type="text" id="publishDomain" readonly>
-            </div>
-            <p id="publishMessage" style="font-size: 14px; color: #48bb78; font-weight: 600; margin: 15px 0;"></p>
-            <div class="modal-buttons">
-                <button class="btn-modal cancel" onclick="closePublishModal()">Close</button>
+        <div class="modal-card">
+            <h3>site published</h3>
+            <h2>Website Live</h2>
+            <p>Your retro website is now ready to launch.</p>
+            <div class="domain-display" id="publishUrl">your-site.build</div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="closeModal()">Close</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Google Generative AI Configuration
-        const GOOGLE_API_KEY = 'AIzaSyD1234567890'; // Replace with your actual Google API key
-        const GOOGLE_AI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+        const chatBody = document.getElementById('chatBody');
+        const chatInput = document.getElementById('chatInput');
+        const publishModal = document.getElementById('publishModal');
+        const publishUrl = document.getElementById('publishUrl');
 
-        let currentEditingElement = null;
-        let publishedDomain = null;
+        function addMessage(text, who = 'bot') {
+            const msg = document.createElement('div');
+            msg.className = 'message ' + who;
+            msg.textContent = text;
+            chatBody.appendChild(msg);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
 
-        // Initialize
-        document.getElementById('chatInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
+        function sendPrompt() {
+            const value = chatInput.value.trim();
+            if (!value) return;
 
-        async function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            
-            if (!message) return;
+            addMessage(value, 'user');
+            chatInput.value = '';
 
-            // Add user message to chat
-            addMessage(message, 'user');
-            input.value = '';
-            input.style.height = 'auto';
+            const loader = document.createElement('div');
+            loader.className = 'message bot';
+            loader.innerHTML = '<span class="loading"><span class="spinner"></span> Processing...</span>';
+            chatBody.appendChild(loader);
+            chatBody.scrollTop = chatBody.scrollHeight;
 
-            // Show loading indicator
-            const loadingId = 'loading-' + Date.now();
-            document.getElementById('chatMessages').innerHTML += `<div class="message assistant" id="${loadingId}"><span class="loading"></span>Processing...</div>`;
-            scrollChatToBottom();
-
-            try {
-                // Call Google Gemini API
-                const response = await fetch(GOOGLE_AI_URL + '?key=' + GOOGLE_API_KEY, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: `You are a helpful website builder assistant. The user is building a website and wants your help. Be concise, friendly, and provide actionable suggestions. Their message: "${message}"`
-                            }]
-                        }]
-                    })
-                });
-
-                const data = await response.json();
-                
-                // Remove loading indicator
-                const loadingElement = document.getElementById(loadingId);
-                if (loadingElement) loadingElement.remove();
-
-                if (data.candidates && data.candidates[0]) {
-                    const assistantMessage = data.candidates[0].content.parts[0].text;
-                    addMessage(assistantMessage, 'assistant');
-                } else {
-                    addMessage("I'm here to help you build your website! What would you like to add or change?", 'assistant');
-                }
-            } catch (error) {
-                console.log('API Note: Using demo mode. Replace GOOGLE_API_KEY with your actual key.');
-                
-                // Remove loading indicator
-                const loadingElement = document.getElementById(loadingId);
-                if (loadingElement) loadingElement.remove();
-
-                // Demo response when API key is not set
-                const demoResponses = [
-                    "Great idea! For your " + message + ", I'd suggest making it clear and focused on your main message.",
-                    "That sounds awesome! To make " + message + " stand out, consider using bold text and organizing it into bullet points.",
-                    "Perfect! Let me help you with " + message + ". You can click sections in the preview to edit them directly.",
-                    "I love that direction! For " + message + ", keep it concise and highlight your key benefits."
+            setTimeout(() => {
+                loader.remove();
+                const responses = [
+                    'Perfect. I recommend a bold hero section with a neon callout, quick stats, and a bold CTA for your audience.',
+                    'That layout works well. Add a fast intro, a feature row, and a strong trust section to keep the page readable.',
+                    'Nice idea. I’d make it more retro by adding dark gradients, neon accents, and clean typography with a futuristic feel.',
+                    'Great direction. I’d structure the page into hero, features, social proof, and a clear CTA to convert visitors.'
                 ];
-                
-                const demoResponse = demoResponses[Math.floor(Math.random() * demoResponses.length)];
-                addMessage(demoResponse, 'assistant');
-            }
+                addMessage(responses[Math.floor(Math.random() * responses.length)]);
+            }, 700);
         }
 
-        function addMessage(text, sender) {
-            const messagesContainer = document.getElementById('chatMessages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
-            messageDiv.textContent = text;
-            messagesContainer.appendChild(messageDiv);
-            scrollChatToBottom();
-        }
-
-        function scrollChatToBottom() {
-            const container = document.getElementById('chatMessages');
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function editSection(element) {
-            // Highlight current editing element
-            if (currentEditingElement) {
-                currentEditingElement.classList.remove('active');
-            }
-            element.classList.add('active');
-            currentEditingElement = element;
-
-            // Add AI suggestion to chat
-            addMessage(`📝 I see you want to edit: "${element.textContent.substring(0, 50)}...". What would you like me to change?`, 'assistant');
-        }
-
-        function publishWebsite() {
-            const domain = document.getElementById('domainInput').value.trim();
-            
-            if (!domain) {
-                alert('Please enter a domain name first!');
-                return;
-            }
-
-            if (!domain.includes('.')) {
-                publishedDomain = domain + '.build';
-            } else {
-                publishedDomain = domain;
-            }
-
-            document.getElementById('publishDomain').value = publishedDomain;
-            document.getElementById('publishMessage').textContent = `✅ Your site is live at: ${publishedDomain}`;
-            document.getElementById('publishModal').classList.add('active');
-
-            // Add notification to chat
-            addMessage(`🚀 Awesome! Your website has been published at ${publishedDomain}. Anyone can now visit your site!`, 'assistant');
-        }
-
-        function closePublishModal() {
-            document.getElementById('publishModal').classList.remove('active');
-        }
-
-        // Allow closing modal with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closePublishModal();
+        chatInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendPrompt();
             }
         });
+
+        function publishSite() {
+            const value = document.getElementById('domainInput').value.trim();
+            const finalDomain = value ? value.toLowerCase() : 'your-site.build';
+            publishUrl.textContent = finalDomain.includes('.') ? finalDomain : finalDomain + '.build';
+            publishModal.classList.add('active');
+            addMessage('Deployment successful. Your retro landing page is live at ' + publishUrl.textContent + '.', 'bot');
+        }
+
+        function closeModal() {
+            publishModal.classList.remove('active');
+        }
     </script>
 </body>
 </html>
